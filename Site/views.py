@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 # Create your views here.
 def home(request):
@@ -13,6 +15,13 @@ def Cadastro(request):
         email = request.POST.get('email')
         matricula = request.POST.get('matricula')
         senha = request.POST.get('password')
+
+        user = User.objects.filter(username=username).first()
+        
+        if user: 
+            return HttpResponse("Esse Usuario j´s existe.")
+            # messages.error(request, 'Usuário já existe.')
+
         return HttpResponse(username)
 
 def VizEstoque(request):
