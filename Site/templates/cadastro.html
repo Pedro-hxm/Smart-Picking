@@ -22,6 +22,14 @@
                         {% csrf_token %}
                         <h2>CADASTRO</h2>
                         <p>Preencha seus dados</p>
+
+                        {% if messages %}
+                        {% for message in messages %}
+                            <script>
+                                alert("{{ message }}");
+                            </script>
+                        {% endfor %}
+                        {% endif %}
                         <div class="form-group">
                             <input type="text" id="name" name="name" placeholder="Nome">
                         </div>
