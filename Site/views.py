@@ -1,8 +1,11 @@
+import logging
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate
+from django.contrib.auth import login as login_django
+from django.shortcuts import redirect
 
 # Importa a classe HttpResponse que é usada para retornar respostas HTTP simples.
 # Importa a função render que é usada para renderizar templates HTML e retornar uma resposta.
@@ -73,16 +76,17 @@ def Login(request):
             # Se o usuário com o email fornecido não existir, user é definido como None.
             user = None
 
-        # Se a autenticação for bem-sucedida, o usuário é logado e redirecionado para a página "dadosDaEmpresa".
-        if user is not None:
-            # O Login(request, user) deveria ser a função login() do Django para autenticar o usuário, mas aqui está errado.
-            Login(request, user)  # Deveria ser: login(request, user)
-            return render(request, 'dadosDaEmpresa.html')
+        if user:
+            login_django(request, user)
+            logging.info("Usuário autenticado com sucesso. Redirecionando para 'dados'.")
+
+            return redirect('dados')
+
         else:
-            # Se a autenticação falhar, uma mensagem de erro é exibida e a página de login é renderizada novamente.
             messages.error(request, "Email ou senha incorretos.")
             return render(request, 'login.html')
-
+            
+            
 # Função para renderizar a página com dados da empresa.
 def dados_empresa(request):
     return render(request, 'dadosDaEmpresa.html')

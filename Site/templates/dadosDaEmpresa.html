@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Picking - Dados da Empresa</title>
-    <link rel="stylesheet" type="text/css" href="dadosDaEmpresa.css" media="screen" />
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dadosDaEmpresa.css' %}" media="screen" />
 </head>
 <body>
     <div class="sidebar">
@@ -17,7 +18,7 @@
             <li><a href="#">Visualizar estoque</a></li>
         </ul>
         <div class="logo-container">
-            <img src="_4f0175fe-f321-4cb1-a2e7-1e5bb5b34891-removebg-preview 2.png" alt="Logo do Avião">
+            <img src="{% static 'css/img/_4f0175fe-f321-4cb1-a2e7-1e5bb5b34891-removebg-preview 2.png' %}" alt="Logo do Avião">
         </div>
     </div>
     <div class="main-content">
