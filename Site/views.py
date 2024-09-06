@@ -32,11 +32,24 @@ def Cadastro(request):
         senha = request.POST.get('password')
 
         # Verifica se já existe um usuário com o mesmo nome de usuário no banco de dados.
-        user = User.objects.filter(username=username).exists()
+        userName = User.objects.filter(username=username).exists()
+        userEmail = User.objects.filter(email=email).exists()
+        userMatricula = User.objects.filter(first_name=matricula).exists()
+    
+
 
         # Se o nome de usuário já estiver cadastrado, envia uma mensagem de erro e renderiza novamente a página de cadastro.
-        if user:
+
+        if userName:
             messages.error(request, "Este Usuário já está Cadastrado.")
+            return render(request, "cadastro.html")
+        
+        elif userEmail:
+            messages.error(request, "Este Email já está Cadastrado.")
+            return render(request, "cadastro.html")
+        
+        elif userMatricula:
+            messages.error(request, "Essa Matricula já está Cadastrada.")
             return render(request, "cadastro.html")
         
         # Caso o usuário não exista, cria um novo usuário com os dados fornecidos.
@@ -47,7 +60,7 @@ def Cadastro(request):
         messages.success(request, 'Usuário Cadastrado com Sucesso.')
         
         # Após o cadastro, redireciona o usuário para a página de login.
-        return render(request, "login.html")
+        return redirect("Login")
 
 # Função para renderizar a página de visualização do estoque.
 def VizEstoque(request):
@@ -60,37 +73,52 @@ def Login(request):
     if request.method == "GET":
         return render(request, "login.html")
     else:
-        # Caso o método seja POST, tenta autenticar o usuário com as credenciais fornecidas.
-        
-        # Obtém os dados do formulário de login.
+        # Agora usamos 'email' para capturar o dado do formulário
         email = request.POST.get('email')
         senha = request.POST.get('password')
 
-        try:
-            # Tenta encontrar um usuário no banco de dados com o email fornecido.
-            user_obj = User.objects.get(email=email)
-            
-            # Se o usuário for encontrado, tenta autenticar usando o username e a senha fornecida.
-            user = authenticate(username=user_obj.username, password=senha)
-        except User.DoesNotExist:
-            # Se o usuário com o email fornecido não existir, user é definido como None.
-            user = None
+        # Verifica se os dados estão preenchidos
+        if not email or not senha:
+            messages.error(request, "Todos os campos são obrigatórios.")
+            return render(request, 'login.html')
 
-        if user:
-            login_django(request, user)
-            logging.info("Usuário autenticado com sucesso. Redirecionando para 'dados'.")
+        # Autentica o usuário com base no email e senha
+        user = authenticate(request, username=email, password=senha)
 
-            return redirect('dados')
-
+        if user is not None:
+            if user.is_active:
+                login_django(request, user)
+                logging.info(f"Usuário {email} autenticado com sucesso. Redirecionando para 'dados'.")
+                return redirect('dados')
+            else:
+                messages.error(request, "Conta desativada.")
+                return render(request, 'login.html')
         else:
+            logging.warning(f"Tentativa de login falhou para o usuário: {email}")
             messages.error(request, "Email ou senha incorretos.")
             return render(request, 'login.html')
+        
+        # elif user:
+        #     # login_django(request, user)
+        #     # logging.info("Usuário autenticado com sucesso. Redirecionando para 'dados'.")
+        #     return HttpResponse('Entrou.')
+
+        #     # return redirect('dados')
+
+        # else:
+        #     messages.error(request, "Email ou senha incorretos.")
+        #     return render(request, 'login.html')
             
             
 # Função para renderizar a página com dados da empresa.
 def dados_empresa(request):
-    return render(request, 'dadosDaEmpresa.html')
+    if request.user.is_authenticated:
 
+        return render(request, 'dadosDaEmpresa.html')
+    else:
+        
+        return redirect('Login')
+    
 # Função para renderizar a página "guiratao".
 def GuiRatão(request):
     return render(request, 'guiratao.html')
