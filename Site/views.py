@@ -119,6 +119,12 @@ def dados_empresa(request):
         
         return redirect('Login')
     
+def cadastrarItens(request):
+    return render(request, 'cadastrarItens.html')
+
+def retirarItens(request):
+    return render(request, 'retirarItens.html')
+
 # Função para renderizar a página "guiratao".
 def GuiRatão(request):
     return render(request, 'guiratao.html')

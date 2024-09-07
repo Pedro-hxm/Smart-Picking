@@ -12,10 +12,10 @@
         <h1>SMART <span style="color: #87A5CB;">PICKING</span></h1>
         <h2>Menu</h2>
         <ul>
-            <li><a href="#">Início</a></li>
-            <li><a href="#">Cadastrar itens</a></li>
-            <li><a href="#">Retirar itens</a></li>
-            <li><a href="#">Visualizar estoque</a></li>
+            <li> <a  onclick="window.location.href='{% url 'dados' %}';" href="#" > Início </a> </li>
+            <li> <a onclick="window.location.href='{% url 'cadItens' %}';" href="#" > Cadastrar itens </a> </li>
+            <li> <a onclick="window.location.href='{% url 'retItens' %}';" href= "#" > Retirar itens </a> </li>
+            <li> <a onclick="window.location.href='{% url 'VizEtoque' %}';" href= "#" > Visualizar estoque </a> </li>
         </ul>
         <div class="logo-container">
             <img src="{% static 'css/img/_4f0175fe-f321-4cb1-a2e7-1e5bb5b34891-removebg-preview 2.png' %}" alt="Logo do Avião">
